@@ -1,0 +1,88 @@
+server:
+  port: ${SERVER_PORT:8080}
+  compression:
+    enabled: true
+
+spring:
+  application:
+    name: xinmeiti
+  # MyBatis-Plus
+  mybatis-plus:
+    configuration:
+      map-underscore-to-camel-case: true
+    global-config:
+      db-config:
+        id-type: auto
+        logic-delete-field: null
+  datasource:
+    url: jdbc:sqlite:${XMT_DB_PATH:./data/xinmeiti.db}
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      pool-name: sqlite-pool
+      maximum-pool-size: 1
+      minimum-idle: 1
+      connection-init-sql: "PRAGMA journal_mode=WAL; PRAGMA busy_timeout=8000; PRAGMA foreign_keys=ON; PRAGMA synchronous=NORMAL;"
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      continue-on-error: false
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 60MB
+      file-size-threshold: 1KB        # 超过 1KB 直接落磁盘，避免吃内存
+  jackson:
+    default-property-inclusion: non_null
+    date-format: yyyy-MM-dd HH:mm:ss
+  # 邮件通知：不配置 host 时系统自动跳过发信，仅保留站内消息
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:465}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: ${MAIL_SSL:true}
+          auth: true
+          timeout: 8000
+          connectiontimeout: 8000
+
+# Sa-Token 配置
+sa-token:
+  token-name: satoken              # 前端通过请求头 satoken 传递
+  timeout: 604800                  # 登录有效期 7 天
+  active-timeout: -1               # 不做续期限制
+  is-concurrent: true              # 允许多地同时登录
+  is-share: false                  # 每次登录产生新 token
+  token-style: uuid
+  is-log: false
+  is-read-header: true
+  is-read-cookie: true
+  is-read-body: true               # 允许 ?satoken=xxx 传参，附件下载走浏览器原生下载时用得上
+
+xmt:
+  # 首次启动自动创建的管理员账号
+  bootstrap:
+    admin-username: ${XMT_ADMIN_USERNAME:admin}
+    admin-password: ${XMT_ADMIN_PASSWORD:admin123}
+    admin-nickname: 系统管理员
+  # 站点地址（邮件里的跳转链接用，末尾不要加斜杠）
+  site-url: ${XMT_SITE_URL:http://localhost:8080}
+  # 邮件通知开关（总开关，关闭后即使配了 SMTP 也不发）
+  mail-enabled: ${XMT_MAIL_ENABLED:true}
+  # 任务压缩包存放目录（发布任务时可挂一个 zip/rar/7z）
+  upload-dir: ${XMT_UPLOAD_DIR:./data/uploads}
+  # 默认分值
+  default-claim-score: 1
+  default-complete-score: 1
+  default-review-score: 1
+  # 定时任务执行间隔（毫秒）：到期未接取自动分配
+  auto-assign-fixed-delay: 30000
+
+logging:
+  level:
+    root: INFO
+    cn.tazumesans.xinmeiti: INFO

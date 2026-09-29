@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --brand: #0f766e;
+  --brand-dark: #115e59;
+}
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  background: #f6f7f5;
+  color: #1f2430;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 卡片 */
+.card {
+  @apply bg-white rounded-2xl shadow-sm border border-slate-100;
+}
+
+.btn,
+.btn-primary,
+.btn-ghost,
+.btn-danger {
+  @apply inline-flex items-center justify-center gap-1 rounded-xl px-4 py-2 text-sm font-medium
+         transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+}
+.btn-primary {
+  @apply bg-teal-600 text-white hover:bg-teal-700;
+}
+.btn-ghost {
+  @apply bg-slate-100 text-slate-700 hover:bg-slate-200;
+}
+.btn-danger {
+  @apply bg-rose-500 text-white hover:bg-rose-600;
+}
+
+.input {
+  @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none
+         focus:border-teal-500 focus:ring-2 focus:ring-teal-100;
+}
+.label {
+  @apply block text-xs font-medium text-slate-500 mb-1;
+}
+.tag {
+  @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+}
+
+/* 安全区适配（iPhone 底部） */
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+}
